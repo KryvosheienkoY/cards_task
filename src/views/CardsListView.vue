@@ -7,7 +7,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-autocomplete
-                    :items="$store.getters.availableTags"
+                    :items="availableTags"
                     outlined
                     chips
                     small-chips
@@ -16,7 +16,7 @@
                     dense
                     clearable
                     hide-details
-                    @change="(tags) => $store.dispatch('setTags', tags)"
+                    @change="setTags"
                 >
                 </v-autocomplete>
               </v-col>
@@ -28,7 +28,7 @@
                     hide-details
                     outlined
                     clearable
-                    @change="(sorting)=> $store.dispatch('setSorting', sorting)"
+                    @change="setSorting"
                 ></v-autocomplete>
               </v-col>
             </v-row>
@@ -37,16 +37,16 @@
       </v-col>
       <v-col cols="12">
         <v-row>
-          <v-col cols="12" md="6" lg="3" v-for="card in $store.getters.currentCards" v-bind:key="card.id">
+          <v-col cols="12" md="6" lg="3" v-for="card in currentCards" v-bind:key="card.id">
             <Card :card="card"></Card>
           </v-col>
         </v-row>
         <div class="text-center mt-8">
-          <v-pagination
-              v-model="page"
-              :length="3"
-              @input="cards"
-          ></v-pagination>
+          <!--          <v-pagination-->
+          <!--              v-model="page"-->
+          <!--              :length="3"-->
+          <!--              @input="cards"-->
+          <!--          ></v-pagination>-->
         </div>
       </v-col>
     </v-row>
@@ -56,6 +56,7 @@
 <script>
 import {ORDER_COMMENTS, ORDER_LIKES} from "@/constants";
 import Card from "@/components/Card";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "CardsList",
@@ -63,13 +64,27 @@ export default {
   data() {
     return {}
   },
+  created() {
+    this.$store.dispatch('loadCards');
+  },
   computed: {
     sortings() {
       return [{text: "Likes", value: ORDER_LIKES}, {text: "Comments", value: ORDER_COMMENTS}];
     },
+
+    ...mapGetters([
+      'currentCards',
+      'availableTags'
+    ]),
   },
 
-  methods: {}
+  methods: {
+    ...mapActions([
+        'loadCards',
+        'setTags',
+        'setSorting'
+    ]),
+  }
 }
 </script>
 
