@@ -5,6 +5,8 @@
     <v-img
         :src="`${card.webformatURL}`"
         height="250px"
+        class="card-img"
+        @click="$router.push({ name: 'CardInfoView', params: {card: card }, props:  {default: true} , query: { id: card.id}})"
     ></v-img>
     <v-card-title>
       <v-row>
@@ -12,7 +14,7 @@
              <v-icon left color="primary" class="d-none d-sm-inline-flex">mdi-comment</v-icon>
         </span>
         <span class="ml-auto">{{ card.likes }}
-          <v-icon left color="primary"  class="d-none d-sm-inline-flex">mdi-thumb-up</v-icon>
+          <v-icon left color="primary" class="d-none d-sm-inline-flex">mdi-thumb-up</v-icon>
        </span>
       </v-row>
     </v-card-title>
@@ -39,15 +41,17 @@ export default {
   props: [
     'card'
   ],
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .card {
   overflow: hidden;
+
+  .card-img:hover {
+    cursor: pointer;
+  }
 }
 
 

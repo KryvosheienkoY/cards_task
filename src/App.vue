@@ -1,19 +1,15 @@
 <template>
   <v-app>
     <div id="app">
-      <CardsList></CardsList>
+      <router-view></router-view>
     </div>
   </v-app>
 </template>
 
 <script>
-import CardsList from "./views/CardsListView";
 
 export default {
   name: 'App',
-  components: {
-    CardsList,
-  }
 }
 </script>
 
