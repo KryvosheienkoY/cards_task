@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
-
+import {ORDER_COMMENTS, ORDER_LIKES} from "@/constants";
 
 Vue.use(Vuex)
 
@@ -10,6 +10,7 @@ export default new Vuex.Store({
     state: {
         cards: [],
         tags: [],
+        sorting: undefined,
     },
 
     getters: {
@@ -18,9 +19,20 @@ export default new Vuex.Store({
         },
 
         currentCards: state => {
-            return state.tags.length
+            const cards = state.tags.length
                 ? state.cards.filter(card => card.tags.split(',').some(tag => state.tags.includes(tag.trim())))
-                : state.cards;
+                : [...state.cards];
+            if (state.sorting === ORDER_LIKES) {
+                cards.sort((a, b) => a.likes - b.likes);
+            } else if (state.sorting === ORDER_COMMENTS) {
+                cards.sort((a, b) => a.comments - b.comments);
+            }
+            console.log("currentCards--",
+                state.sorting,
+                cards.map(card => ({comments: card.comments, likes: card.likes})),
+                state.cards.map(card => ({comments: card.comments, likes: card.likes})),
+            );
+            return cards;
         },
 
         availableTags: state => {
@@ -46,8 +58,12 @@ export default new Vuex.Store({
             commit("SET_TAGS", tags);
         },
 
-        clearTags({commit}){
+        clearTags({commit}) {
             commit("SET_TAGS", []);
+        },
+
+        setSorting({commit}, value = undefined) {
+            commit('SET_SORTING', value);
         }
     },
     mutations: {
@@ -58,9 +74,14 @@ export default new Vuex.Store({
         },
 
         SET_TAGS(state, tags) {
-            //update cards
+            //update tags
             state.tags.length = 0;
             state.tags.push(...tags);
+        },
+
+        SET_SORTING(state, sorting) {
+            //update SORTING
+            state.sorting = sorting;
         }
     }
 })

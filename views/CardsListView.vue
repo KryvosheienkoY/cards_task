@@ -23,19 +23,20 @@
               <v-col cols="12" md="6">
                 <v-autocomplete
                     v-model="selectedSortingMethod"
-                    :items="sortingMethods"
+                    :items="sortings"
                     label="Sort by:"
                     dense
                     hide-details
                     outlined
                     clearable
+                    @change="(sorting)=> $store.dispatch('setSorting', sorting)"
                 ></v-autocomplete>
               </v-col>
             </v-row>
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col class="col-12 col-md-9 col-lg-10">
+      <v-col cols="12">
         <v-row>
           <v-col cols="12" md="6" lg="3" v-for="card in $store.getters.currentCards" v-bind:key="card.id">
             <Card :card="card"></Card>
@@ -54,9 +55,7 @@
 </template>
 
 <script>
-// import axios from "axios";
-
-
+import {ORDER_COMMENTS, ORDER_LIKES} from "@/constants";
 import Card from "@/components/Card";
 
 export default {
@@ -83,7 +82,10 @@ export default {
   computed: {
     cards() {
       return this.$store.getters.allCards
-    }
+    },
+    sortings() {
+      return [{text: "Likes", value: ORDER_LIKES}, {text: "Comments", value: ORDER_COMMENTS}];
+    },
   },
 
   methods: {
