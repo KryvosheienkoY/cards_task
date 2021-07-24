@@ -27,11 +27,6 @@ export default new Vuex.Store({
             } else if (state.sorting === ORDER_COMMENTS) {
                 cards.sort((a, b) => a.comments - b.comments);
             }
-            console.log("currentCards--",
-                state.sorting,
-                cards.map(card => ({comments: card.comments, likes: card.likes})),
-                state.cards.map(card => ({comments: card.comments, likes: card.likes})),
-            );
             return cards;
         },
 

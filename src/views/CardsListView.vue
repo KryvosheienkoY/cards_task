@@ -22,7 +22,6 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-autocomplete
-                    v-model="selectedSortingMethod"
                     :items="sortings"
                     label="Sort by"
                     dense
@@ -62,65 +61,15 @@ export default {
   name: "CardsList",
   components: {Card},
   data() {
-    return {
-      sortingMethods: ["Likes", "Comments"],
-      selectedSortingMethod: '',
-      tags: [],
-      selectedTags: [],
-      page: 1,
-      totalPages: 1,
-
-    }
-  },
-  created() {
-    // this.getContent()
-    this.$store.dispatch('loadCards').then(() => {
-      this.getAvailableTags();
-    });
-
+    return {}
   },
   computed: {
-    cards() {
-      return this.$store.getters.allCards
-    },
     sortings() {
       return [{text: "Likes", value: ORDER_LIKES}, {text: "Comments", value: ORDER_COMMENTS}];
     },
   },
 
-  methods: {
-    getAvailableTags() {
-      console.log("getAvailableTags");
-      this.cards.map(card => card.tags.split(',').map(elem => {
-        elem.trim();
-        if (!this.tags.includes(elem))
-          this.tags.push(elem);
-        console.log("push - elem -  " + elem);
-      }))
-    },
-    clearFilters() {
-      this.selectedSortingMethod = '';
-      this.selectedTags = [];
-
-      // this.getContent()
-    },
-    showLog(...args) {
-      console.log(args);
-    },
-    // getContent() {
-    //
-    //   axios.get(`https://pixabay.com/api/?key=22618300-37dce439110119651c92e1365&q=cats&image_type=all&per_page=3`)
-    //       .then(response => {
-    //         // this.cards = response.data.hits
-    //         console.log(response.data.hits)
-    //         this.$store.commit('setCards', response.data.hits)
-    //       })
-    // },
-
-    getFilteredCards() {
-      return this.$store.getters.filteredByTagsCardsGetter(this.tags);
-    }
-  }
+  methods: {}
 }
 </script>
 

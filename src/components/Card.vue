@@ -2,7 +2,6 @@
   <v-card class="card mx-auto my-6"
           height="350px"
   >
-    <!--    <v-row class="d-flex">-->
     <v-img
         :src="`${card.webformatURL}`"
         height="250px"
@@ -33,7 +32,6 @@
 </template>
 
 <script>
-// import {mapMutations} from "vuex";
 
 export default {
   name: "Card",
@@ -42,13 +40,7 @@ export default {
     'card'
   ],
   methods: {
-    //
-    // ...mapMutations([
-    //   'storageRemoveMutation',
-    // ]),
-    // removecard() {
-    //   this.storageRemoveMutation({card: this.card})
-    // },
+
   }
 }
 </script>
