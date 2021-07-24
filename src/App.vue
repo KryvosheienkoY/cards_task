@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import CardsList from "../views/CardsListView";
+import CardsList from "./views/CardsListView";
 
 export default {
   name: 'App',

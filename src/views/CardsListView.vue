@@ -24,7 +24,7 @@
                 <v-autocomplete
                     v-model="selectedSortingMethod"
                     :items="sortings"
-                    label="Sort by:"
+                    label="Sort by"
                     dense
                     hide-details
                     outlined
