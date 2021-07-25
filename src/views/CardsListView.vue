@@ -23,12 +23,13 @@
               <v-col cols="12" md="6">
                 <v-autocomplete
                     :items="sortings"
+                    v-model="selectedSort"
                     label="Sort by"
                     dense
                     hide-details
                     outlined
                     clearable
-                    @change="setSorting"
+                    @change="sortCards"
                 >
                   <template v-slot:append-outer>
                     <v-icon
@@ -64,7 +65,7 @@
 </template>
 
 <script>
-import {ORDER_COMMENTS, ORDER_LIKES} from "@/constants";
+import {ORDER_COMMENTS, ORDER_LIKES, ORDER_ASCENDING, ORDER_DESCENDING} from "@/constants";
 import Card from "@/components/Card";
 import {mapActions, mapGetters} from "vuex";
 
@@ -74,6 +75,8 @@ export default {
   data() {
     return {
       sortingIcon: 'mdi-sort-ascending',
+      orderMethod: ORDER_ASCENDING,
+      selectedSort: '',
     }
   },
   created() {
@@ -81,7 +84,11 @@ export default {
   },
   computed: {
     sortings() {
-      return [{text: "Likes", value: ORDER_LIKES}, {text: "Comments", value: ORDER_COMMENTS}];
+      return [{text: "Likes", value: ORDER_LIKES, order: this.orderMethod}, {
+        text: "Comments",
+        value: ORDER_COMMENTS,
+        order: this.orderMethod
+      }];
     },
 
     ...mapGetters([
@@ -97,7 +104,17 @@ export default {
       'setSorting'
     ]),
     changeSortingOrder() {
-      this.sortingIcon = (this.sortingIcon === 'mdi-sort-descending') ? 'mdi-sort-ascending' : 'mdi-sort-descending'
+      if (this.orderMethod === ORDER_DESCENDING) {
+        this.sortingIcon = 'mdi-sort-ascending';
+        this.orderMethod = ORDER_ASCENDING;
+      } else {
+        this.sortingIcon = 'mdi-sort-descending';
+        this.orderMethod = ORDER_DESCENDING;
+      }
+      this.sortCards();
+    },
+    sortCards(){
+      this.setSorting({sortingMethod: this.selectedSort, sortingOrder: this.orderMethod});
     }
   }
 }

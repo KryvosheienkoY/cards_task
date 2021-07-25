@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
-import {ORDER_COMMENTS, ORDER_LIKES, API_KEY} from "@/constants";
+import {ORDER_COMMENTS, ORDER_LIKES, API_KEY, ORDER_DESCENDING} from "@/constants";
 
 Vue.use(Vuex)
 
@@ -10,7 +10,10 @@ export default new Vuex.Store({
     state: {
         cards: [],
         tags: [],
-        sorting: undefined,
+        sorting: {
+            sortingMethod: undefined,
+            sortingOrder: undefined
+        },
         mapOfCards: new Map(),
     },
 
@@ -23,10 +26,14 @@ export default new Vuex.Store({
             const cards = state.tags.length
                 ? state.cards.filter(card => card.tags.split(',').some(tag => state.tags.includes(tag.trim())))
                 : [...state.cards];
-            if (state.sorting === ORDER_LIKES) {
+            if (state.sorting.sortingMethod === ORDER_LIKES) {
                 cards.sort((a, b) => a.likes - b.likes);
-            } else if (state.sorting === ORDER_COMMENTS) {
+            } else if (state.sorting.sortingMethod === ORDER_COMMENTS) {
                 cards.sort((a, b) => a.comments - b.comments);
+            }
+            console.log('sortingOrder -', state.sorting.sortingOrder);
+            if (state.sorting.sortingOrder === ORDER_DESCENDING) {
+                cards.reverse();
             }
             return cards;
         },
@@ -42,10 +49,6 @@ export default new Vuex.Store({
         },
 
         cardById: state => id => {
-            console.log("(id) - ", id);
-            console.log("state.mapOfCards.get(id) - ", state.mapOfCards.get(id));
-            console.log("state.mapOfCards.has(id) - ", state.mapOfCards.has(id));
-            console.log("state.mapOfCards() - ", state.mapOfCards);
             return state.mapOfCards.get(id);
         },
     },
@@ -63,22 +66,6 @@ export default new Vuex.Store({
                 .then(response => {
                     commit("SET_CARDS", response.data.hits);
                 })
-        },
-        loadCardById({commit}, id) {
-            //check if card was already loaded, if not - get it by api
-            if (!this.state.mapOfCards.has(id)) {
-                axios.get(`https://pixabay.com/api/`, {
-                    params: {
-                        key: API_KEY,
-                        id: id,
-                    }
-                })
-                    .then(response => {
-                        commit("SET_CARD_MAP", response.data.hits);
-                    })
-
-
-            }
         },
 
         async loadCardByIdAsync({commit, state}, id) {
@@ -109,6 +96,7 @@ export default new Vuex.Store({
         },
 
         setSorting({commit}, value = undefined) {
+            console.log("setSorting");
             commit('SET_SORTING', value);
         }
     },
@@ -131,9 +119,12 @@ export default new Vuex.Store({
             state.tags.push(...tags);
         },
 
-        SET_SORTING(state, sorting) {
+        SET_SORTING(state, sortingObj) {
             //update SORTING
-            state.sorting = sorting;
+            state.sorting.sortingMethod = sortingObj.sortingMethod;
+            state.sorting.sortingOrder = sortingObj.sortingOrder;
+            console.log("SET_SORTING - ", state.sorting);
+
         }
     }
 })
