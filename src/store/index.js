@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
-import {ORDER_COMMENTS, ORDER_LIKES} from "@/constants";
+import {ORDER_COMMENTS, ORDER_LIKES, API_KEY} from "@/constants";
 
 Vue.use(Vuex)
 
@@ -11,6 +11,7 @@ export default new Vuex.Store({
         cards: [],
         tags: [],
         sorting: undefined,
+        mapOfCards: new Map(),
     },
 
     getters: {
@@ -39,14 +40,64 @@ export default new Vuex.Store({
             });
             return [...tags];
         },
+
+        cardById: state => id => {
+            console.log("(id) - ", id);
+            console.log("state.mapOfCards.get(id) - ", state.mapOfCards.get(id));
+            console.log("state.mapOfCards.has(id) - ", state.mapOfCards.has(id));
+            console.log("state.mapOfCards() - ", state.mapOfCards);
+            return state.mapOfCards.get(id);
+        },
     },
     actions: {
 
         loadCards({commit}) {
-            axios.get(`https://pixabay.com/api/?key=22618300-37dce439110119651c92e1365&q=cats&image_type=all&per_page=5`)
+            axios.get(`https://pixabay.com/api/`, {
+                params: {
+                    key: API_KEY,
+                    q: 'cats',
+                    image_type: 'all',
+                    per_page: 5,
+                }
+            })
                 .then(response => {
                     commit("SET_CARDS", response.data.hits);
                 })
+        },
+        loadCardById({commit}, id) {
+            //check if card was already loaded, if not - get it by api
+            if (!this.state.mapOfCards.has(id)) {
+                axios.get(`https://pixabay.com/api/`, {
+                    params: {
+                        key: API_KEY,
+                        id: id,
+                    }
+                })
+                    .then(response => {
+                        commit("SET_CARD_MAP", response.data.hits);
+                    })
+
+
+            }
+        },
+
+        async loadCardByIdAsync({commit, state}, id) {
+            if (state.mapOfCards.has(id)) {
+                console.log('Got cached by id=' + id);
+            } else {
+                console.log('Getting from API by id=' + id);
+                const response = await axios
+                    .get(`https://pixabay.com/api/`, {
+                        params: {
+                            key: API_KEY,
+                            id: id,
+                        }
+                    })
+                    .catch(err => {
+                        throw ('Anus sebe rejectni pes ' + err);
+                    });
+                commit("SET_CARD_MAP", response.data.hits);
+            }
         },
 
         setTags({commit}, tags) {
@@ -66,7 +117,13 @@ export default new Vuex.Store({
             //update cards
             state.cards.length = 0;
             state.cards.push(...cards);
+            cards.forEach(elem => state.mapOfCards.set(elem.id, elem));
         },
+
+        SET_CARD_MAP(state, cards) {
+            cards.forEach(elem => state.mapOfCards.set(elem.id, elem));
+        },
+
 
         SET_TAGS(state, tags) {
             //update tags

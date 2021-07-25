@@ -29,7 +29,17 @@
                     outlined
                     clearable
                     @change="setSorting"
-                ></v-autocomplete>
+                >
+                  <template v-slot:append-outer>
+                    <v-icon
+                        left
+                        color="primary"
+                        class="d-none d-sm-inline-flex"
+                        @click="changeSortingOrder">
+                      {{ sortingIcon }}
+                    </v-icon>
+                  </template>
+                </v-autocomplete>
               </v-col>
             </v-row>
           </v-card-text>
@@ -62,10 +72,12 @@ export default {
   name: "CardsList",
   components: {Card},
   data() {
-    return {}
+    return {
+      sortingIcon: 'mdi-sort-ascending',
+    }
   },
   created() {
-    this.$store.dispatch('loadCards');
+    this.loadCards();
   },
   computed: {
     sortings() {
@@ -80,10 +92,13 @@ export default {
 
   methods: {
     ...mapActions([
-        'loadCards',
-        'setTags',
-        'setSorting'
+      'loadCards',
+      'setTags',
+      'setSorting'
     ]),
+    changeSortingOrder() {
+      this.sortingIcon = (this.sortingIcon === 'mdi-sort-descending') ? 'mdi-sort-ascending' : 'mdi-sort-descending'
+    }
   }
 }
 </script>

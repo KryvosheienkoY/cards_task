@@ -6,14 +6,14 @@
         :src="`${card.webformatURL}`"
         height="250px"
         class="card-img"
-        @click="$router.push({ name: 'CardInfoView', params: {card: card }, props:  {default: true} , query: { id: card.id}})"
+        @click="$router.push({ name: 'CardInfoView', params: {id: card.id }})"
     ></v-img>
     <v-card-title>
       <v-row>
-        <span class="mr-auto">{{ card.comments }}
+        <span class="mr-auto ml-1">{{ card.comments }}
              <v-icon left color="primary" class="d-none d-sm-inline-flex">mdi-comment</v-icon>
         </span>
-        <span class="ml-auto">{{ card.likes }}
+        <span class="ml-auto mr-1">{{ card.likes }}
           <v-icon left color="primary" class="d-none d-sm-inline-flex">mdi-thumb-up</v-icon>
        </span>
       </v-row>
@@ -37,10 +37,12 @@
 
 export default {
   name: "Card",
-
-  props: [
-    'card'
-  ],
+  props: {
+    card: {
+      type: Object,
+      required: true,
+    }
+  },
   methods: {}
 }
 </script>

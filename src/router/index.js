@@ -6,9 +6,14 @@ Vue.use(VueRouter)
 
 const routes = [
     {
-        path: '/card',
+        path: '/card/:id',
         name: 'CardInfoView',
-        component: CardInfoView
+        component: CardInfoView,
+        props: (route) => {
+            return {
+                id: +route.params.id,
+            };
+        },
     },
     {
         path: '/',
