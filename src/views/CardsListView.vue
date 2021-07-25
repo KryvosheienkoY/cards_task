@@ -53,11 +53,12 @@
           </v-col>
         </v-row>
         <div class="text-center mt-8">
-          <!--          <v-pagination-->
-          <!--              v-model="page"-->
-          <!--              :length="3"-->
-          <!--              @input="cards"-->
-          <!--          ></v-pagination>-->
+          <v-pagination
+              v-model="page"
+              :length="totalPages"
+              :total-visible="10"
+              @input="getContent"
+          ></v-pagination>
         </div>
       </v-col>
     </v-row>
@@ -77,10 +78,14 @@ export default {
       sortingIcon: 'mdi-sort-ascending',
       orderMethod: ORDER_ASCENDING,
       selectedSort: '',
+      totalPages: 1,
+      page: 1,
+      per_page: 16,
     }
   },
   created() {
-    this.loadCards();
+    this.page = +this.$route.query.page || 1
+    this.getContent();
   },
   computed: {
     sortings() {
@@ -113,8 +118,24 @@ export default {
       }
       this.sortCards();
     },
-    sortCards(){
+    sortCards() {
       this.setSorting({sortingMethod: this.selectedSort, sortingOrder: this.orderMethod});
+    },
+    getContent() {
+      this.$router.push({
+        query:
+            {
+              page: this.page,
+            }
+      });
+      this.loadCards({
+        page: this.page,
+        per_page: this.per_page,
+      }).then((pages) => {
+        this.totalPages = pages;
+        window.scrollTo(0,0);
+      });
+
     }
   }
 }

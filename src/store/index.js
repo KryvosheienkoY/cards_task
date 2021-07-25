@@ -31,7 +31,6 @@ export default new Vuex.Store({
             } else if (state.sorting.sortingMethod === ORDER_COMMENTS) {
                 cards.sort((a, b) => a.comments - b.comments);
             }
-            console.log('sortingOrder -', state.sorting.sortingOrder);
             if (state.sorting.sortingOrder === ORDER_DESCENDING) {
                 cards.reverse();
             }
@@ -54,18 +53,20 @@ export default new Vuex.Store({
     },
     actions: {
 
-        loadCards({commit}) {
-            axios.get(`https://pixabay.com/api/`, {
+        async loadCards({commit}, additionalParams) {
+            const response = await axios.get(`https://pixabay.com/api/`, {
                 params: {
                     key: API_KEY,
-                    q: 'cats',
+                    q: 'gold fish',
                     image_type: 'all',
-                    per_page: 5,
+                    per_page: additionalParams.per_page,
+                    page: additionalParams.page,
                 }
-            })
-                .then(response => {
-                    commit("SET_CARDS", response.data.hits);
-                })
+            }).catch(err => {
+                throw ('Error: ' + err);
+            });
+            commit("SET_CARDS", response.data.hits);
+            return Math.ceil(response.data.totalHits / additionalParams.per_page);
         },
 
         async loadCardByIdAsync({commit, state}, id) {
@@ -81,7 +82,7 @@ export default new Vuex.Store({
                         }
                     })
                     .catch(err => {
-                        throw ('Anus sebe rejectni pes ' + err);
+                        throw ('Error: ' + err);
                     });
                 commit("SET_CARD_MAP", response.data.hits);
             }
@@ -96,7 +97,6 @@ export default new Vuex.Store({
         },
 
         setSorting({commit}, value = undefined) {
-            console.log("setSorting");
             commit('SET_SORTING', value);
         }
     },
@@ -123,7 +123,6 @@ export default new Vuex.Store({
             //update SORTING
             state.sorting.sortingMethod = sortingObj.sortingMethod;
             state.sorting.sortingOrder = sortingObj.sortingOrder;
-            console.log("SET_SORTING - ", state.sorting);
 
         }
     }

@@ -21,7 +21,7 @@
     <v-card-text class="my-2">
       <v-row>
         <v-chip
-
+            small
             class="chip my-4 ml-2"
             color="primary"
             v-for="tag in (card.tags.split(',').map(elem=>elem.trim()))" :key="tag"
