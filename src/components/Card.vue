@@ -1,6 +1,6 @@
 <template>
   <v-card class="card mx-auto my-6"
-          height="350px"
+          height="370px"
   >
     <v-img
         :src="`${card.webformatURL}`"
@@ -9,7 +9,7 @@
         @click="$router.push({ name: 'CardInfoView', params: {id: card.id }})"
     ></v-img>
     <v-card-title>
-      <v-row>
+      <v-row class="mb-1">
         <span class="mr-auto ml-1">{{ card.comments }}
              <v-icon left color="primary" class="d-none d-sm-inline-flex">mdi-comment</v-icon>
         </span>
@@ -22,7 +22,7 @@
       <v-row>
         <v-chip
             small
-            class="chip my-4 ml-2"
+            class="chip my-1 ml-2"
             color="primary"
             v-for="tag in (card.tags.split(',').map(elem=>elem.trim()))" :key="tag"
         > {{ tag }}

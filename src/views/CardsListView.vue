@@ -5,7 +5,19 @@
         <v-card class="pb-0">
           <v-card-text>
             <v-row>
-              <v-col cols="12" md="6">
+              <v-col cols="12" md="4">
+                <v-text-field
+                    v-model="query"
+                    label="Search"
+                    hide-details="auto"
+                    append-icon="mdi-magnify"
+                    outlined
+                    dense
+                    @click:append="getContent"
+                    @keyup.enter="getContent"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="4">
                 <v-autocomplete
                     :items="availableTags"
                     outlined
@@ -20,7 +32,7 @@
                 >
                 </v-autocomplete>
               </v-col>
-              <v-col cols="12" md="6">
+              <v-col cols="12" md="4">
                 <v-autocomplete
                     :items="sortings"
                     v-model="selectedSort"
@@ -46,7 +58,9 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12">
+      <v-col
+          v-if="query!==undefined"
+          cols="12">
         <v-row>
           <v-col cols="12" md="6" lg="3" v-for="card in currentCards" v-bind:key="card.id">
             <Card :card="card"></Card>
@@ -60,6 +74,13 @@
               @input="getContent"
           ></v-pagination>
         </div>
+      </v-col>
+      <v-col
+          v-else
+          cols="12"
+          class="my-8"
+      >
+        Type query to make a search
       </v-col>
     </v-row>
   </v-container>
@@ -81,10 +102,12 @@ export default {
       totalPages: 1,
       page: 1,
       per_page: 16,
+      query: '',
     }
   },
   created() {
-    this.page = +this.$route.query.page || 1
+    this.page = +this.$route.query.page || 1;
+    this.query=this.$route.query.searchQuery;
     this.getContent();
   },
   computed: {
@@ -122,20 +145,24 @@ export default {
       this.setSorting({sortingMethod: this.selectedSort, sortingOrder: this.orderMethod});
     },
     getContent() {
-      this.$router.push({
-        query:
-            {
-              page: this.page,
-            }
-      });
-      this.loadCards({
-        page: this.page,
-        per_page: this.per_page,
-      }).then((pages) => {
-        this.totalPages = pages;
-        window.scrollTo(0,0);
-      });
-
+      if (this.query !== '' && this.query!==undefined) {
+        this.$router.push({
+          query:
+              {
+                searchQuery: this.query,
+                page: this.page,
+              }
+        });
+        this.loadCards({
+          query: this.query,
+          page: this.page,
+          per_page: this.per_page,
+        }).then((pages) => {
+          this.totalPages = pages;
+          window.scrollTo(0, 0);
+        });
+      }
+      console.log("query - ", this.query);
     }
   }
 }

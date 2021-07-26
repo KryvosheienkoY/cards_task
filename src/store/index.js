@@ -57,7 +57,7 @@ export default new Vuex.Store({
             const response = await axios.get(`https://pixabay.com/api/`, {
                 params: {
                     key: API_KEY,
-                    q: 'gold fish',
+                    q: additionalParams.query,
                     image_type: 'all',
                     per_page: additionalParams.per_page,
                     page: additionalParams.page,
@@ -66,6 +66,7 @@ export default new Vuex.Store({
                 throw ('Error: ' + err);
             });
             commit("SET_CARDS", response.data.hits);
+            console.log("load cards with q - ", additionalParams.query);
             return Math.ceil(response.data.totalHits / additionalParams.per_page);
         },
 

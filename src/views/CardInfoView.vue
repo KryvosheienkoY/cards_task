@@ -9,7 +9,7 @@
           depressed
           outlined
           color="primary"
-          @click="$router.push('/')"
+          @click="$router.go(-1)"
       >
         Go Back
       </v-btn>
