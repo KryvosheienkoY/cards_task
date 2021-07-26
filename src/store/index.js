@@ -66,7 +66,6 @@ export default new Vuex.Store({
                 throw ('Error: ' + err);
             });
             commit("SET_CARDS", response.data.hits);
-            console.log("load cards with q - ", additionalParams.query);
             return Math.ceil(response.data.totalHits / additionalParams.per_page);
         },
 

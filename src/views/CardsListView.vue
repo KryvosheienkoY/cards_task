@@ -12,9 +12,8 @@
                     hide-details="auto"
                     append-icon="mdi-magnify"
                     outlined
-                    dense
-                    @click:append="getContent"
-                    @keyup.enter="getContent"
+                    @click:append="searchQuery"
+                    @keyup.enter="searchQuery"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="4">
@@ -25,7 +24,6 @@
                     small-chips
                     label="Tags"
                     multiple
-                    dense
                     clearable
                     hide-details
                     @change="setTags"
@@ -37,7 +35,6 @@
                     :items="sortings"
                     v-model="selectedSort"
                     label="Sort by"
-                    dense
                     hide-details
                     outlined
                     clearable
@@ -107,7 +104,7 @@ export default {
   },
   created() {
     this.page = +this.$route.query.page || 1;
-    this.query=this.$route.query.searchQuery;
+    this.query = this.$route.query.searchQuery;
     this.getContent();
   },
   computed: {
@@ -144,8 +141,12 @@ export default {
     sortCards() {
       this.setSorting({sortingMethod: this.selectedSort, sortingOrder: this.orderMethod});
     },
+    searchQuery() {
+      this.page = 1;
+      this.getContent();
+    },
     getContent() {
-      if (this.query !== '' && this.query!==undefined) {
+      if (this.query !== '' && this.query !== undefined) {
         this.$router.push({
           query:
               {
@@ -153,6 +154,7 @@ export default {
                 page: this.page,
               }
         });
+        this.setTags([]);
         this.loadCards({
           query: this.query,
           page: this.page,
@@ -162,7 +164,6 @@ export default {
           window.scrollTo(0, 0);
         });
       }
-      console.log("query - ", this.query);
     }
   }
 }

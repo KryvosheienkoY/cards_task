@@ -1,11 +1,11 @@
 <template>
   <v-row class="my-1">
-    <v-col cols="8">
+    <v-col cols="12" md="8">
       <v-img
           :src="`${card.webformatURL}`"
       ></v-img>
     </v-col>
-    <v-col cols="4" class="my-1 details-col">
+    <v-col cols="12" md="4" class="my-1 details-col">
       <v-row
           align-content="center"
           class="container-user">
