@@ -22,9 +22,10 @@
       <v-row>
         <v-chip
             small
-            class="chip my-1 ml-2"
+            class="chip my-1 ml-2 chip-tag"
             color="primary"
             v-for="tag in (card.tags.split(',').map(elem=>elem.trim()))" :key="tag"
+            @dblclick="editTag({id: card.id, tag: tag})"
         > {{ tag }}
         </v-chip>
       </v-row>
@@ -35,6 +36,8 @@
 
 <script>
 
+import {mapActions} from "vuex";
+
 export default {
   name: "Card",
   props: {
@@ -43,7 +46,13 @@ export default {
       required: true,
     }
   },
-  methods: {}
+
+  methods: {
+    ...mapActions([
+      'editTag',
+    ]),
+
+  }
 }
 </script>
 
@@ -54,6 +63,11 @@ export default {
   .card-img:hover {
     cursor: pointer;
   }
+
+  .chip-tag:hover {
+    cursor: pointer;
+  }
+
 }
 
 

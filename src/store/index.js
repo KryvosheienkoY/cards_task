@@ -98,7 +98,11 @@ export default new Vuex.Store({
 
         setSorting({commit}, value = undefined) {
             commit('SET_SORTING', value);
-        }
+        },
+
+        editTag({commit}, card) {
+            commit('EDIT_TAG', card);
+        },
     },
     mutations: {
         SET_CARDS(state, cards) {
@@ -117,6 +121,19 @@ export default new Vuex.Store({
             //update tags
             state.tags.length = 0;
             state.tags.push(...tags);
+        },
+        EDIT_TAG(state, card) {
+            console.log("tag - ", card.tag);
+            state.cards.forEach((elem, index) => {
+                if (elem.id === card.id) {
+                    let edited_card = {};
+                    for (let k in elem)
+                        edited_card[k] = elem[k];
+                    edited_card.tags = elem.tags.replace(card.tag, 'editedTag');
+                    state.cards.splice(index, 1, edited_card);
+                }
+            });
+            // this.$set(this.item, 'b', 2)
         },
 
         SET_SORTING(state, sortingObj) {
