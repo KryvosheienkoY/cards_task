@@ -116,12 +116,12 @@ export default new Vuex.Store({
             cards.forEach(elem => state.mapOfCards.set(elem.id, elem));
         },
 
-
         SET_TAGS(state, tags) {
             //update tags
             state.tags.length = 0;
             state.tags.push(...tags);
         },
+
         EDIT_TAG(state, card) {
             console.log("tag - ", card.tag);
             state.cards.forEach((elem, index) => {
@@ -133,7 +133,6 @@ export default new Vuex.Store({
                     state.cards.splice(index, 1, edited_card);
                 }
             });
-            // this.$set(this.item, 'b', 2)
         },
 
         SET_SORTING(state, sortingObj) {
