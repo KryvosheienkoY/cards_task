@@ -153,7 +153,7 @@ export default {
                 searchQuery: this.query,
                 page: this.page,
               }
-        });
+        }).catch(()=>{});
         this.setTags([]);
         this.loadCards({
           query: this.query,

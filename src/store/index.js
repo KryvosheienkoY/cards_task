@@ -123,7 +123,6 @@ export default new Vuex.Store({
         },
 
         EDIT_TAG(state, card) {
-            console.log("tag - ", card.tag);
             state.cards.forEach((elem, index) => {
                 if (elem.id === card.id) {
                     let edited_card = {};

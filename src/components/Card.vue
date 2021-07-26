@@ -6,7 +6,7 @@
         :src="`${card.webformatURL}`"
         height="250px"
         class="card-img"
-        @click="$router.push({ name: 'CardInfoView', params: {id: card.id }})"
+        @click="$router.push({ name: 'CardInfoView', params: {id: card.id }}).catch(() => {})"
     ></v-img>
     <v-card-title>
       <v-row class="mb-1">
@@ -24,7 +24,7 @@
             small
             class="chip my-1 ml-2 chip-tag"
             color="primary"
-            v-for="tag in (card.tags.split(',').map(elem=>elem.trim()))" :key="tag"
+            v-for="(tag, index) in (card.tags.split(',').map(elem=>elem.trim()))" :key="index"
             @dblclick="editTag({id: card.id, tag: tag})"
         > {{ tag }}
         </v-chip>
