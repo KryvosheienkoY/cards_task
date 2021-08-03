@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import {ORDER_COMMENTS, ORDER_LIKES, ORDER_ASCENDING, ORDER_DESCENDING} from "@/constants";
+import {ORDER_COMMENTS, ORDER_LIKES, ORDER_ASCENDING, ORDER_DESCENDING} from "@/myConstants";
 import Card from "@/components/Card";
 import {mapActions, mapGetters} from "vuex";
 
